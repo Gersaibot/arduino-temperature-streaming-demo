@@ -35,5 +35,28 @@ Gran parte de este tipo de proyectos requieren la necesidad de realizar explorac
 * Arduino IDE 1.8.5
 *
 
+## Instalación
 
+### Arduino IDE
 
+#### ESP8266
+
+#### Librerías
+
+## Configuración
+
+## Montaje
+
+## Sketch
+
+## Ejecución
+
+## Flujo de datos
+
+## Procesamiento en streaming
+
+## Trabajos futuros
+
+## Referencias
+
+## Creditos
