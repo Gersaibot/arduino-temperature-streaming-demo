@@ -18,10 +18,22 @@ Para hacer la redirección de mensajes entre un servicio de publicación y otro 
 
 Cabe destacar que resulta beneficio enviar la información a un medio de persistencia que permita realizar procesamiento en batch de la información de una forma mas tradicional. Bajo el mismo orden de ideas de herramientas open source, Apache Hive se presenta como una opción atractiva. Hive es un datawarehouse relacional que puede ser manipulado bajo una lenguage SQL-like y posee funcionalidades que lo hacen sobresalir en ambientes clusterizados y/o distribuidos, facilitando el escalamiento horitzontal del datawarehouse, la cual es una caracteristica importante en proyectos donde se podrían recibir grandes volúmenes de información.
 
-Gran parte de este tipo de proyectos requieren la necesidad de realizar exploraciones moderadamente sencillas, interactivas y rapidas de implementar. Bajo esta premisa, las consolas o shells interactivos basados en la creación de notebooks cobran mucha utilidad.
+Gran parte de este tipo de proyectos requieren la necesidad de realizar exploraciones moderadamente sencillas, interactivas y rapidas de implementar. Bajo esta premisa, las consolas o shells interactivos basados en la creación de notebooks cobran mucha utilidad. Apache Zeppelin es un proyecto en incubación que consiste en una implementación de la idea/concepto de web noteboook, el cual fue introducido por primera vez por IPython. Zeppelin esta enfocado en el desarrollo de procesos analíticos e interactivos de datos mediante tecnologías y lenguajes como Shell, SQL, Spark (Scala), Hive, Elasticsearch, R y demás.
 
-Apache Zeppelin es un proyecto en incubación desarrollado por la Apache Software Fundation que consiste en una implementación de la idea/concepto de web noteboook, el cual fue introducido por primera vez po IPython. Zeppelin esta enfocado en el desarrollo de procesos analíticos e interactivos de datos mediante tecnologías y lenguajes como Shell, Spark (Scala), Hive, Elasticsearch, R y demás.
+## Equipos usados
 
+* Arduino UNO R3 Clone - (USB Chip CH340) + Cable USB
+* Sensor de humedad y tempreatura DHT11
+* WiFi Shield ESP 8266 ESP-01
+* Protoboard MB-102
+* Resitencia 1K (DHT)
+* Resistencia 10K
+* Cableado
+
+## Versiones de herramientas
+
+* Arduino IDE 1.8.5
+*
 
 
 
