@@ -38,16 +38,108 @@ Gran parte de este tipo de proyectos requieren la necesidad de realizar explorac
 ## Instalación
 
 ### Arduino IDE
+El software necesario para cargar secuencias de instrucciones a la placa de Arduino se llama Arduino IDE y puede ser descargado desde la web [oficial de arduino](https://www.arduino.cc/en/Main/Software]). Puede ser decargado para Windows, Linux y Mac OS X.
 
 #### ESP8266
+Para poder manipular el shield WiFi ESP8266 es necesario instalar componentes adicionales sobre el Arduino IDE. Esto permititrá configurar las opciones de compilación del codigo que se enviará al componente y utilizar los metodos y librerías para manipular las conexiones. 
+El proceso de instalación se encuentra detallado en el (repositorio oficial de ESP8266 para Arduino)[https://github.com/esp8266/Arduino.git], pero básicamente, la instalación puede llevarse a cabo mediante dos métodos:
+
+##### Usando el Administrador de Placas de Arduino IDE
+1. Iniciar el Arduino IDE y abrir la ventana de Preferencias bajo las pestaña Archivo.
+2. Ingresar el valor http://arduino.esp8266.com/stable/package_esp8266com_index.json en el campo Gestor de URLs Adicionales de Tarjetas.
+3. Abrir el Gestor de Tarjetas desde Herramientas > Placa e instalar la placa esp8266.
+
+##### Usando git
+1. Dirigirse al directorio de instalación de Arduino.
+2. Clonar el repositorio https://github.com/esp8266/Arduino.git en hardware/esp8266com :
+```bash
+cd hardware
+mkdir esp8266com
+cd esp8266com
+git clone https://github.com/esp8266/Arduino.git esp8266
+```
+3. Descargar los archivos binarios con Python (2.7) :
+```bash
+cd esp8266/tools
+python get.py
+```
+4. Reiniciar Arduino
 
 #### Librerías
+Para manipular los sensores, realizar los procesos de publicación de información y entre otras funciones es necesario instalar librerías adicionales.
 
-## Configuración
+Para instalar una librería adicional es posible usar el Gestor de Librerías del Arduino IDE bajo la pestaña Programas > Incluír librería.
+
+Tambien es posible incluir librerías descargandolas de forma local en formato .ZIP y añadiendolas desde la pestaña Programas > Incluír librería > Añadir librería .ZIP
+
+Las adicionales usadas en este proyecto son:
+* Adafruit Unified Sensor (1.0.2)
+* DHT sensor library (1.3.0)
+* PubSubClient (2.6.0)
+* Time (1.5.0)
+* NTPClient (3.1.0)
 
 ## Montaje
 
+Antes de presentar el diagrama del montaje de componentes, es necesario determinar cuales son las entradas y salidas de cada componente y como se identifican dentro del diagrama.
+
+### Diagrama Pinout ESP8266
+
+* TX - Verde
+* GND - Negro
+* CH_PD - Naranja
+* GPIO2 - Azul
+* GPIO0 - Blanco
+* VCC - Rojo
+* RX - Amarillo
+
+### Diagrama Pinout DHT11
+
+* GND - Blanco
+* Data - Azul
+* VCC - Naranja
+
+### Diagrama Pinout del demo
+
+
+
+
+## Compilación
+
+**La carga de las intrucciones no se realiza al arduino sino al shield WiFi**, ya que es éste quien debe recibir y enviar los datos del sensor de temperatura. Por ello, hay que seleccionar la placa ESP8266 y ajustar las opciones de compilación. Para ello seleccionamos la placa desde Herramientas > Placa > Generic ESP8266 Module.
+
+La pestaña Herramientas tendrá nuevas ocpiones, las cuales se configurarán de la siguiente forma:
+* Flash Mode: "DIO"
+* Flash Size: "512K (64 SPIFFS)"
+* Debug port: "Disabled"
+* Debug level: "Ninguno"
+* Reset Method: "ck"
+* Crystal Frequency: "26 MHz"
+* Flash Frequency: "40 MHz"
+* CPU Frequency: "80 MHz"
+* Upload Speed: "115200"
+* Programador: "AVRISP mkII"
+
+**Dependiendo del modelo del componente ESP8266 usado**, puede que sea necesario cambiar el parámetro **Upload Speed** a 9600. Por defecto, la mayoria de los modelos trabajan bajo la velocidad de baudios 115200.
+
 ## Sketch
+
+Dentro de la comunidad de Arduino, el conjunto de instrucciones que se cargan en una placa son llamados "Sketch". El Sketch que utilizaremos se encuentra en la carpeta "sketch" del repositorio.
+
+Dentro del sketch es necesario editar la constantes declaradas al inicio con los datos pertinentes a nuestro ecosistema.
+
+El sketch se encargará de: 
+* inicializar el monitor de serie del Arduino IDE, mediante el cual podremos visualizar las salidas del programa y monitorear el estado de ejecución.
+* Inicializar el sensor de temperatura
+* Establecer una conexion con la red WiFi definida.
+* Consultar la fecha/hora a un servidor externo de acuerdo a la zona horaria definida.
+* Definir el nombre del dispositivo emisor de datos (shield WiFi en nuestro caso)
+* Establecer conexión con el servidor MQTT.
+* Realizar lecturas del sensor de temperatura.
+* Estructurar el payload en formato JSON.
+* Enviar el payload al servidor MQTT.
+* Realizar verificaciones de conexión y lecturas.
+* Imprimir mensajes de control e información en el monitor de serie a la velocidad de baudios definida (en nuestro caso, 115200)
 
 ## Ejecución
 
