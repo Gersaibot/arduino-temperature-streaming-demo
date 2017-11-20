@@ -107,7 +107,7 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 
 ![Alt text](/images/demo_pinout.png?raw=true "Demo Diagram")
 
-## Compilación
+## Configuración
 
 **La carga de las intrucciones no se realiza al arduino sino al shield WiFi**, ya que es éste quien debe recibir y enviar los datos del sensor de temperatura. Por ello, hay que seleccionar la placa ESP8266 y ajustar las opciones de compilación. Para ello seleccionamos la placa desde Herramientas > Placa > Generic ESP8266 Module.
 
@@ -132,7 +132,7 @@ Dentro de la comunidad de Arduino, el conjunto de instrucciones que se cargan en
 Dentro del sketch es necesario editar la constantes declaradas al inicio con los datos pertinentes a nuestro ecosistema.
 
 El sketch se encargará de: 
-* inicializar el monitor de serie del Arduino IDE, mediante el cual podremos visualizar las salidas del programa y monitorear el estado de ejecución.
+* Inicializar el monitor de serie del Arduino IDE, mediante el cual podremos visualizar las salidas del programa y monitorear el estado de ejecución.
 * Inicializar el sensor de temperatura
 * Establecer una conexion con la red WiFi definida.
 * Consultar la fecha/hora a un servidor externo de acuerdo a la zona horaria definida.
@@ -144,7 +144,19 @@ El sketch se encargará de:
 * Realizar verificaciones de conexión y lecturas.
 * Imprimir mensajes de control e información en el monitor de serie a la velocidad de baudios definida (en nuestro caso, 115200)
 
-## Ejecución
+## Compilación, carga y ejecución
+
+Es posible compilar el código antes de cargarlo a alguna placa haciendo clic en el botón "Verificar" de la interfaz del Arduino IDE.
+
+Para cargar el código al módulo ESP8266, es necesario conectar la placa Arduino al ordenador mediante el puerto USB. De esta forma, será posible definir el puerto de comunicación con la placa bajo la pestaña Herramientas > Puerto, donde seleccionaremos el puerto disponible.
+
+Podemos abrir el monitor de serie del Arduino IDE para verificar la ejecución del código cuando se realice la carga. Se recomiendan las siguientes opciones sobre el monitor para visualizar la información correcta:
+
+* Autoscroll
+* Ambos NL & CR
+* 115200 baudio
+
+
 
 ## Flujo de datos
 
