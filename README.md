@@ -105,7 +105,7 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 
 ### Diagrama Pinout del demo
 
-![Alt text](/images/demo_pinout.png?raw=true "Demo Diagram")
+![Alt text](images/demo_pinout.png?raw=true "Demo Diagram")
 
 ## Configuración
 
