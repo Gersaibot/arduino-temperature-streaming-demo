@@ -156,9 +156,17 @@ Podemos abrir el monitor de serie del Arduino IDE para verificar la ejecución d
 * Ambos NL & CR
 * 115200 baudio
 
-
-
 ## Flujo de datos
+
+![Alt text](/images/architecture.png?raw=true "Architecture Diagram")
+
+### 1 - Generación de datos a partir del sensor de temperatura y humedad.
+* El código cargado en la plataforma Arduino realiza lecturas a través del sensor de temperatura cada 3 segundos, captando:
+   * Porcentaje de humedad en el ambiente.
+   * Temperatura en grados Celsius (°C)
+   * Temperatura en grados Fahrenheit (°F)
+* Se calcula el Índice de Calor en Celsius  y Fahrenheit, el cual determina como las personas perciben la temperatura de acuerdo a la humedad del ambiente.
+* Se realiza una petición a un servicio web externo para determinar la hora de la lectura de acuerdo a una zona horaria predefinida.
 
 ## Procesamiento en streaming
 
