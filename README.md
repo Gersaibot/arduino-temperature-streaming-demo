@@ -127,8 +127,6 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 
 ### Diagrama Pinout ESP8266
 
-![Alt text](/images/esp8266_pinout.png?raw=true "ESP8266 Pinout Diagram")
-
 * TX - Verde
 * GND - Negro
 * CH_PD - Naranja
@@ -136,20 +134,19 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 * GPIO0 - Blanco
 * VCC - Rojo
 * RX - Amarillo
+![Alt text](/images/esp8266_pinout.png?raw=true "ESP8266 Pinout Diagram")
 
 ### Diagrama Pinout DHT11
-
-![Alt text](/images/dht11_pinout.png?raw=true "ESP8266 Pinout Diagram")
 
 * GND - Blanco
 * Data - Azul
 * VCC - Naranja
+![Alt text](/images/dht11_pinout.png?raw=true "ESP8266 Pinout Diagram")
 
 ### Diagrama Pinout del demo
 
-![Alt text](images/demo_pinout_fm.png?raw=true "Demo Diagram Flash Mode")
-
 //Explicación general de pinout. Distribución de voltajes e información
+![Alt text](images/demo_pinout_fm.png?raw=true "Demo Diagram Flash Mode")
 
 ## Configuración
 
