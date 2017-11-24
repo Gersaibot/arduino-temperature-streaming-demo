@@ -33,7 +33,10 @@ Gran parte de este tipo de proyectos requieren la necesidad de realizar explorac
 ## Versiones de herramientas
 
 * Arduino IDE 1.8.5
-*
+* Hive 1.2.1
+* Kafka 0.10.0
+* Spark 1.6.2
+* Zeppelin Notebook 0.6.0
 
 ## Instalación
 
@@ -105,7 +108,7 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 
 ### Diagrama Pinout del demo
 
-![Alt text](images/demo_pinout.png?raw=true "Demo Diagram")
+![Alt text](images/demo_pinout_fm.png?raw=true "Demo Diagram Flash Mode")
 
 ## Configuración
 
@@ -156,6 +159,12 @@ Podemos abrir el monitor de serie del Arduino IDE para verificar la ejecución d
 * Ambos NL & CR
 * 115200 baudio
 
+Una vez que el modulo ESP8266 reciba energía entrará en el Flash Mode, en el cual podremos cargarle las instrucciones del skecth.
+
+Luego de que las instrucciones han sido cargadas, hay que desconectar de tierra el pin GPIO0 (blanco) del modulo ESP8266 y conectarlo al voltaje bajo la resistencia. De esta forma, el módulo ESP8266 no entrará en el Flash Mode la proxima vez que la plataforma arduino sea iniciada, permitiendo que ejecute el codigo cargado apenas reciba energía. La configuración de pines quedaría de la siguiente forma:
+
+![Alt text](images/demo_pinout_bm.png?raw=true "Demo Diagram Boot Mode")
+
 ## Flujo de datos
 
 ![Alt text](/images/architecture.png?raw=true "Architecture Diagram")
@@ -197,7 +206,22 @@ Podemos abrir el monitor de serie del Arduino IDE para verificar la ejecución d
 
 ## Procesamiento en streaming
 
-El notebook desarrollado puede ser importado en Zeppelin. El mismo esta compuesto por 7 párrafos:
+El notebook desarrollado con Scala se encuentra en la carpeta notebooks en formato json y puede ser importado en Zeppelin.
+
+Las tablas creadas y utilizadas son las siguientes:
+
+* **mqtt_message_temp**: Tabla temporal que almacenará los mensajes obtenidos en una ventana.
+* **kafka_message**: Tabla que contendrá todos los datos obtenidos de cada una de las ventanas de consulta ejecutadas.
+* **mean_fahrenheit_temp**: Tabla temporal que almacenará la media calculada de las temperaturas (°F) obtenidas en una ventana.
+* **kafka_means_fahrenheit**:Tabla que contendrá todas las medias calculadas de cada una de las ventanas de consulta ejectuadas.
+* **gen_test_data**: Tabla que contiene datos generados aleatoriamente para probar el modelo de clasificación Kmedias. Los datos pueden encontrarse en la carpeta test_data. Los datos fueron generados bajo las siguientes especificaciones:
+   * **id**: Entero autoincremental (unidad) desde valor 1.
+   * **fecha**: String en formato yyyy-MM-dd'T'HH:mm:ssZ entre 2016-11-10 y 2018-10-31.
+   * **timestamp**: String de marca de tiempo en formato Unix desde 1478965467 hasta 1541592359.
+   * **fahrenheit**: String númerico aleatorio entre 15 y 125.
+   * **humedad**: String númerico aleatorio entre 25 y 85.
+
+El notebook contiene los siguientes 7 parrafos:
 
 1. **Setup**
    * Importación de paquetes y librerías usadas en el resto de los parrafos.
@@ -209,18 +233,29 @@ El notebook desarrollado puede ser importado en Zeppelin. El mismo esta compuest
    * Establecimiento de conexión con Kafka.
    * Ejecución de ventana de consulta sobre Kafka.
    * Calculo de la media de las temperaturas (°F) recibidas en la ventana.
+   
+![Alt text](/images/notebook_streaming.png?raw=true "Kafka messages in real time")
+
 3. **Asociación de marcas de tiempo a medias**
    * Asociación de la media calculada con marca de tiempo de generación de datos.
-   * 
 4. **Creación y entrenamiento de modelo Kmedias**
    * Transformación de datos históricos de ventanas como entrada al modelo.
-   * Entrenamiendo del modelo Kmedias.
-   * 
-   
+   * Entrenamiendo del modelo Kmedias en base a la temperatura (°F) y la humedad.
+   * Almacenamiento de modelo en HDFS.
+5. **Clasificación**
+   * Carga de modelo previamente entrenado y almacenado en HDFS.
+   * Clasificación de puntos obtenidos en la ultima ventana consultada.
+   * Visualización de resultados.
+6. **Clasificación - Datos aleatorios**
+   * Carga de modelo previamente entrenado y almacenado en HDFS.
+   * Clasificación de puntos aleatoriamente generados bajo rangos específicos.
+   * Visualización de resultados.
+![Alt text](/images/notebook_kmeans.png?raw=true "Kmeas prediction over random data")
+7. **Seguimiendo de datos**
+   * Visualización de la evolución de la humedad y la temperatura (°C y °F) a lo largo del tiempo sobre los datos hitóricos de ventanas.
+![Alt text](/images/notebook_kmeans.png?raw=true "Humidity and temperature overview over time")
 
 ## Trabajos futuros
-
-
 
 ## Referencias
 
