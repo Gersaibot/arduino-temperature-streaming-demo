@@ -242,12 +242,13 @@ El notebook contiene los siguientes 7 parrafos:
    
 ![Alt text](/images/notebook_streaming.png?raw=true "Kafka messages in real time")
 
-3. **Asociación de marcas de tiempo a medias**
+3. **Asociación de marcas de tiempo a medias** //probar notebook unificando calculo de medias en un mismo parrafo <-
    * Asociación de la media calculada con marca de tiempo de generación de datos.
 4. **Creación y entrenamiento de modelo Kmedias**
    * Transformación de datos históricos de ventanas como entrada al modelo.
    * Entrenamiendo del modelo Kmedias en base a la temperatura (°F) y la humedad.
    * Almacenamiento de modelo en HDFS.
+   // Explicar la suma de cuadrados.
 5. **Clasificación**
    * Carga de modelo previamente entrenado y almacenado en HDFS.
    * Clasificación de puntos obtenidos en la ultima ventana consultada.
