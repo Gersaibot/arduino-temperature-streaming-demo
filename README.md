@@ -38,6 +38,45 @@ Gran parte de este tipo de proyectos requieren la necesidad de realizar explorac
 * Spark 1.6.2
 * Zeppelin Notebook 0.6.0
 
+## Flujo de datos
+
+![Alt text](/images/architecture.png?raw=true "Architecture Diagram")
+
+### 1 - Generación de datos a partir del sensor de temperatura y humedad.
+* El código cargado en la plataforma Arduino realiza lecturas a través del sensor de temperatura cada 3 segundos, captando:
+   * Porcentaje de humedad en el ambiente.
+   * Temperatura en grados Celsius (°C)
+   * Temperatura en grados Fahrenheit (°F)
+* Se calcula el Índice de Calor en Celsius  y Fahrenheit, el cual determina como las personas perciben la temperatura de acuerdo a la humedad del ambiente.
+* Se realiza una petición a un servicio web externo para determinar la hora de la lectura de acuerdo a una zona horaria predefinida.
+
+### 2 - Publicación de datos al servidor MQTT.
+* Se construye el mensaje o “payload” que será enviado al servidor MQTT:
+   * El payload será construido en formato JSON.
+   * Contiene los datos capturados por el sensor, la información calculada, la fecha/hora de la lectura, la cantidad de microsegundos desde que la plataforma Arduino fue encendida y un identificador único para el cliente emisor.
+* Se realizan verificaciones de conexión a internet y al servidor MQTT.
+* Se realiza la publicación del payload al servidor MQTT.
+   * La publicación se realiza sobre un tópico especifico bajo un nombre de usuario y contraseña predefinidos.
+   * El servidor MQTT posee una lista de permisos donde define cuales usuarios pueden publicar información sobre los tópicos existentes.
+
+### 3, 4 y 5 - Captura de datos del servidor MQTT en tiempo real .
+* El servicio Apache NiFi posee conjuntos organizados de instrucciones que orquestan el flujo de datos a medida que son captados:
+   * NiFi se conecta o “suscribe” al tópico del Mosquitto y captura los mensajes que llegan en tiempo real.
+   * NiFi se complementa el mensaje recibido (cadena JSON) definiendo nuevos campos fuera de la cadena, relacionados a aspectos técnicos del mensaje y del servidor MQTT.
+   * NiFi inserta la cadena JSON y los nuevos campos en el almacén de datos Hive.
+   * NiFi publica el mensaje exactamente igual en Kafka.
+* Hive y Kafka guardan de forma persistente los datos:
+   * Hive hace posible realizar procesamiento en batch de los datos almacenados de forma histórica.
+   * Kafka permite realizar procesamiento en tiempo real de los datos enviados por la palca Arduino.
+
+### 6 y 7 - Procesamiento de datos.
+* Zeppelin ejecuta bloques de código (en Scala y SQL):
+   * Es posible consultar los datos en el almacén de datos.
+   * Es posible suscribirse en tiempo real al tópico de Kafka para monitorear y procesar los datos recibidos en tiempo real bajo distintas ventanas de tiempo
+* El código es ejecutado sobre el motor de consultas Spark.
+* Los datos obtenidos en cada ventana de tiempo son transformados y almacenados en tablas en Hive.
+* Se calcula la media de las temperaturas medidas en Farenheit sobre las ventanas de tiempo y se almacenan en Hive.
+
 ## Instalación
 
 ### Arduino IDE
@@ -110,6 +149,8 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 
 ![Alt text](images/demo_pinout_fm.png?raw=true "Demo Diagram Flash Mode")
 
+//Explicación general de pinout. Distribución de voltajes e información
+
 ## Configuración
 
 **La carga de las intrucciones no se realiza al arduino sino al shield WiFi**, ya que es éste quien debe recibir y enviar los datos del sensor de temperatura. Por ello, hay que seleccionar la placa ESP8266 y ajustar las opciones de compilación. Para ello seleccionamos la placa desde Herramientas > Placa > Generic ESP8266 Module.
@@ -165,44 +206,9 @@ Luego de que las instrucciones han sido cargadas, hay que desconectar de tierra 
 
 ![Alt text](images/demo_pinout_bm.png?raw=true "Demo Diagram Boot Mode")
 
-## Flujo de datos
+## Transferencia de publicaciones
 
-![Alt text](/images/architecture.png?raw=true "Architecture Diagram")
-
-### 1 - Generación de datos a partir del sensor de temperatura y humedad.
-* El código cargado en la plataforma Arduino realiza lecturas a través del sensor de temperatura cada 3 segundos, captando:
-   * Porcentaje de humedad en el ambiente.
-   * Temperatura en grados Celsius (°C)
-   * Temperatura en grados Fahrenheit (°F)
-* Se calcula el Índice de Calor en Celsius  y Fahrenheit, el cual determina como las personas perciben la temperatura de acuerdo a la humedad del ambiente.
-* Se realiza una petición a un servicio web externo para determinar la hora de la lectura de acuerdo a una zona horaria predefinida.
-
-### 2 - Publicación de datos al servidor MQTT.
-* Se construye el mensaje o “payload” que será enviado al servidor MQTT:
-   * El payload será construido en formato JSON.
-   * Contiene los datos capturados por el sensor, la información calculada, la fecha/hora de la lectura, la cantidad de microsegundos desde que la plataforma Arduino fue encendida y un identificador único para el cliente emisor.
-* Se realizan verificaciones de conexión a internet y al servidor MQTT.
-* Se realiza la publicación del payload al servidor MQTT.
-   * La publicación se realiza sobre un tópico especifico bajo un nombre de usuario y contraseña predefinidos.
-   * El servidor MQTT posee una lista de permisos donde define cuales usuarios pueden publicar información sobre los tópicos existentes.
-
-### 3, 4 y 5 - Captura de datos del servidor MQTT en tiempo real .
-* El servicio Apache NiFi posee conjuntos organizados de instrucciones que orquestan el flujo de datos a medida que son captados:
-   * NiFi se conecta o “suscribe” al tópico del Mosquitto y captura los mensajes que llegan en tiempo real.
-   * NiFi se complementa el mensaje recibido (cadena JSON) definiendo nuevos campos fuera de la cadena, relacionados a aspectos técnicos del mensaje y del servidor MQTT.
-   * NiFi inserta la cadena JSON y los nuevos campos en el almacén de datos Hive.
-   * NiFi publica el mensaje exactamente igual en Kafka.
-* Hive y Kafka guardan de forma persistente los datos:
-   * Hive hace posible realizar procesamiento en batch de los datos almacenados de forma histórica.
-   * Kafka permite realizar procesamiento en tiempo real de los datos enviados por la palca Arduino.
-
-### 6 y 7 - Procesamiento de datos.
-* Zeppelin ejecuta bloques de código (en Scala y SQL):
-   * Es posible consultar los datos en el almacén de datos.
-   * Es posible suscribirse en tiempo real al tópico de Kafka para monitorear y procesar los datos recibidos en tiempo real bajo distintas ventanas de tiempo
-* El código es ejecutado sobre el motor de consultas Spark.
-* Los datos obtenidos en cada ventana de tiempo son transformados y almacenados en tablas en Hive.
-* Se calcula la media de las temperaturas medidas en Farenheit sobre las ventanas de tiempo y se almacenan en Hive.
+//NiFi y plantilla (Explicación)
 
 ## Procesamiento en streaming
 
@@ -256,6 +262,8 @@ El notebook contiene los siguientes 7 parrafos:
 ![Alt text](/images/notebook_kmeans.png?raw=true "Humidity and temperature overview over time")
 
 ## Trabajos futuros
+
+//Explicación plug&play de la plataforma arduino. Mas sensores de temperatura. Multiplexación. Indicadores de control. Boton de reseteo.
 
 ## Referencias
 
