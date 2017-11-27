@@ -150,7 +150,7 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 
 La sección superior del protoboard se encuentra dedicada a los pines del módulo ESP8266, el cual se alimenta con voltaje de 3.3V y usa una resistencia de 10k. El flujo de voltaje al módulo WiFi es controlado por el pin verde conectado al protoboard en la ultima columna de la fila de carga positiva.
 
-La sección inferior del protoboard esta casi completamente dedicada al sensor de temperatura DHT. Este sensor trabaja con una voltaje de 5V y una resistencia de 1k. El pin azul transfiere las señales de salida del sensor de temperatura, las cuales son capturadas por el módulo WiFi a través del pin GPIO2 (azul).
+La sección inferior del protoboard esta casi completamente dedicada al sensor de temperatura DHT. Este sensor trabaja con una voltaje de 5V y una resistencia de 1k.
 
 ![Alt text](images/demo_pinout_fm.png?raw=true "Demo Diagram Flash Mode")
 
@@ -209,7 +209,11 @@ Podemos abrir el monitor de serie del Arduino IDE para verificar la ejecución d
 
 Una vez que el modulo ESP8266 reciba energía entrará en el Flash Mode, en el cual podremos cargarle las instrucciones del skecth.
 
-Luego de que las instrucciones han sido cargadas, hay que desconectar de tierra el pin GPIO0 (blanco) del modulo ESP8266 y conectarlo al voltaje bajo la resistencia. De esta forma, el módulo ESP8266 no entrará en el Flash Mode la proxima vez que la plataforma arduino sea iniciada, permitiendo que ejecute el codigo cargado apenas reciba energía. La configuración de pines quedaría de la siguiente forma:
+Luego de que las instrucciones han sido cargadas, hay que desconectar de tierra el pin GPIO0 (blanco) del modulo ESP8266 y conectarlo al voltaje bajo la resistencia. De esta forma, el módulo ESP8266 no entrará en el Flash Mode la proxima vez que la plataforma arduino sea iniciada, permitiendo que ejecute el codigo cargado apenas reciba energía.
+
+Aparte, el pin azul del sensor DHT transfiere las señales de salida, las cuales deben ser capturadas por el módulo WiFi a través del pin GPIO2 (azul).
+
+La configuración de pines quedaría de la siguiente forma:
 
 ![Alt text](images/demo_pinout_bm.png?raw=true "Demo Diagram Boot Mode")
 
@@ -218,6 +222,8 @@ En el monitor de serie podemos observar el proceso de conexión, captura y publi
 ![Alt text](images/serial_monitor.png?raw=true "Serial monitor")
 
 ## Transferencia de publicaciones
+
+**Nota:** Para información sobre despliquege, configuración, suscripcion y publicación sobre Mosquitto y Kafka recomiendo consultar [éste repositorio](https://github.com/Gersaibot/mosquitto-kafka-integration) acerca de la integración entre estos dos servicios.
 
 Si nos suscribimos al tópico de Mosquitto podremos ver en tiempo real como los mensajes son publicados por la placa de Arduino.
 
