@@ -145,12 +145,19 @@ Antes de presentar el diagrama del montaje de componentes, es necesario determin
 
 ### Diagrama Pinout del demo
 
-//Explicación general de pinout. Distribución de voltajes e información
+La sección superior del protoboard se encuentra dedicada a los pines del módulo ESP8266, el cual se alimenta con voltaje de 3.3V y usa una resistencia de 10k. El flujo de voltaje al módulo WiFi es controlado por el pin verde conectado al protoboard en la ultima columna de la fila de carga positiva.
+
+La sección inferior del protoboard esta casi completamente dedicada al sensor de temperatura DHT. Este sensor trabaja con una voltaje de 5V y una resistencia de 1k. El pin azul transfiere las señales de salida del sensor de temperatura, las cuales son capturadas por el módulo WiFi a través del pin GPIO2 (azul).
+
 ![Alt text](images/demo_pinout_fm.png?raw=true "Demo Diagram Flash Mode")
+
+En este proyecto no se cargan instrucciones a la placa de Arduino, sino al módulo ESP8266, ya que es éste quien enviará los datos y es quien se encargará de la manipulación y transformación de los mismos. 
+
+Para cargar instrucciones al modulo WiFi es necesario que éste entre en Flash Mode al momento de inicio, lo cual se logra a través de la configuración de pines mostrada.
 
 ## Configuración
 
-**La carga de las intrucciones no se realiza al arduino sino al shield WiFi**, ya que es éste quien debe recibir y enviar los datos del sensor de temperatura. Por ello, hay que seleccionar la placa ESP8266 y ajustar las opciones de compilación. Para ello seleccionamos la placa desde Herramientas > Placa > Generic ESP8266 Module.
+Debido a que la carga de las intrucciones no estará dirigida a la placa de arduino sino al shield WiFi, hay que seleccionar la placa ESP8266 y ajustar las opciones de compilación. Para ello seleccionamos la placa desde Herramientas > Placa > Generic ESP8266 Module.
 
 La pestaña Herramientas tendrá nuevas ocpiones, las cuales se configurarán de la siguiente forma:
 * Flash Mode: "DIO"
@@ -203,9 +210,29 @@ Luego de que las instrucciones han sido cargadas, hay que desconectar de tierra 
 
 ![Alt text](images/demo_pinout_bm.png?raw=true "Demo Diagram Boot Mode")
 
+En el monitor de serie podemos observar el proceso de conexión, captura y publicación de mensajes.
+
+**// imagen de monitor de serie**
+
 ## Transferencia de publicaciones
 
-//NiFi y plantilla (Explicación)
+Si nos suscribimos al tópico de Mosquitto podremos ver en tiempo real como los mensajes son publicados por la placa de Arduino.
+
+**//imagen mosquitto**
+
+En la carpeta templates se encuentra la plantilla de NiFi utilizada para capturar los datos de Mosquitto y enviarlos tanto a Kafka como a Hive. Cabe destacar que es necesario modificar los parametros de conexión a cada uno de estos servicios como direcciones, tópicos, nombres de tablas, entre otros. 
+
+![Alt text](images/nifi_template.png?raw=true "Demo Diagram Boot Mode")
+
+Los mensajes capturados son publicados exactamente igual en Kafka y en Hive. En este último, se registran campos adicionales en la tabla, relacionados al servidor MQTT desde el cual se captura la información.
+
+Una vez iniciada la plantilla, si nos suscribimos al tópico de Kafka al cual redirigimos los mensajes, podremos observar como los mensajes son publicados prácticamente al instante en que son recibidos en Mosquitto.
+
+**//imagen mosquitto y kafka**
+
+Por otro lado, si consultamos la tabla de Hive periodicamente, notaremos que el numero de registros aumenta de acuerdo a los mensajes que son capturados por NiFi.
+
+**//imagen hive**
 
 ## Procesamiento en streaming
 
