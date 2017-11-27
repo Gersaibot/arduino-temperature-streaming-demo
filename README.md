@@ -37,6 +37,7 @@ Gran parte de este tipo de proyectos requieren la necesidad de realizar explorac
 * Kafka 0.10.0
 * Spark 1.6.2
 * Zeppelin Notebook 0.6.0
+* NiFi 1.2.0
 
 ## Flujo de datos
 
@@ -212,13 +213,11 @@ Luego de que las instrucciones han sido cargadas, hay que desconectar de tierra 
 
 En el monitor de serie podemos observar el proceso de conexión, captura y publicación de mensajes.
 
-**// imagen de monitor de serie**
+![Alt text](images/serial_monitor.png?raw=true "Serial monitor")
 
 ## Transferencia de publicaciones
 
 Si nos suscribimos al tópico de Mosquitto podremos ver en tiempo real como los mensajes son publicados por la placa de Arduino.
-
-**//imagen mosquitto**
 
 En la carpeta templates se encuentra la plantilla de NiFi utilizada para capturar los datos de Mosquitto y enviarlos tanto a Kafka como a Hive. Cabe destacar que es necesario modificar los parametros de conexión a cada uno de estos servicios como direcciones, tópicos, nombres de tablas, entre otros. 
 
@@ -226,13 +225,13 @@ En la carpeta templates se encuentra la plantilla de NiFi utilizada para captura
 
 Los mensajes capturados son publicados exactamente igual en Kafka y en Hive. En este último, se registran campos adicionales en la tabla, relacionados al servidor MQTT desde el cual se captura la información.
 
-Una vez iniciada la plantilla, si nos suscribimos al tópico de Kafka al cual redirigimos los mensajes, podremos observar como los mensajes son publicados prácticamente al instante en que son recibidos en Mosquitto.
+Una vez iniciada la plantilla, si nos suscribimos al tópico de Kafka al cual redirigimos los mensajes, podremos observar como los mensajes son publicados prácticamente al instante en que son recibidos en Mosquitto. En la siguiente imagen se puede apreciar la recepción de mensajes en el tópico de Mosquitto (izquierda) y el tópico de Kafka (derecha).
 
-**//imagen mosquitto y kafka**
+![Alt text](/images/mosquitto_kafka.gif?raw=true "Mosquitto and Kafka")
 
 Por otro lado, si consultamos la tabla de Hive periodicamente, notaremos que el numero de registros aumenta de acuerdo a los mensajes que son capturados por NiFi.
 
-**//imagen hive**
+![Alt text](/images/hive_query.png?raw=true "Hive")
 
 ## Procesamiento en streaming
 
