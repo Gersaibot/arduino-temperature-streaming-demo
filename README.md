@@ -90,7 +90,7 @@ El proceso de instalación se encuentra detallado en el [repositorio oficial de 
 #### Usando el Administrador de Placas de Arduino IDE
 1. Iniciar el Arduino IDE y abrir la ventana de Preferencias bajo las pestaña Archivo.
 2. Ingresar el valor `http://arduino.esp8266.com/stable/package_esp8266com_index.json` en el campo `Gestor de URLs Adicionales de Tarjetas`.
-3. Abrir el `Gestor de Tarjetas desde Herramientas > Placa` e instalar la placa *esp8266*.
+3. Abrir el *Gestor de Tarjetas* desde `Herramientas > Placa` e instalar la placa *esp8266*.
 
 #### Usando git
 1. Dirigirse al directorio de instalación de Arduino.
@@ -254,11 +254,11 @@ Las tablas creadas y utilizadas son las siguientes:
 * **mean_fahrenheit_temp**: Tabla temporal que almacenará la media calculada de las temperaturas (°F) obtenidas en una ventana.
 * **kafka_means_fahrenheit**:Tabla que contendrá todas las medias calculadas de cada una de las ventanas de consulta ejectuadas.
 * **gen_test_data**: Tabla que contiene datos generados aleatoriamente para probar el modelo de clasificación Kmedias. Los datos pueden encontrarse en la carpeta test_data. Los datos fueron generados bajo las siguientes especificaciones:
-   * **id**: Entero autoincremental (unidad) desde valor 1.
-   * **fecha**: String en formato yyyy-MM-dd'T'HH:mm:ssZ entre 2016-11-10 y 2018-10-31.
-   * **timestamp**: String de marca de tiempo en formato Unix desde 1478965467 hasta 1541592359.
-   * **fahrenheit**: String númerico aleatorio entre 15 y 125.
-   * **humedad**: String númerico aleatorio entre 25 y 85.
+   * **id**: Entero autoincremental (unidad) desde valor `1`.
+   * **fecha**: String en formato `yyyy-MM-dd'T'HH:mm:ssZ` entre `2016-11-10` y `2018-10-31`.
+   * **timestamp**: String de marca de tiempo en formato Unix desde `1478965467` hasta `1541592359`.
+   * **fahrenheit**: String númerico aleatorio entre `15` y `125`.
+   * **humedad**: String númerico aleatorio entre `25` y `85`.
 
 El notebook contiene los siguientes 7 parrafos:
 
