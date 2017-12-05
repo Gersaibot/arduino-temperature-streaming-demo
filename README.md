@@ -253,7 +253,7 @@ Las tablas creadas y utilizadas son las siguientes:
 * **kafka_message**: Tabla que contendrá todos los datos obtenidos de cada una de las ventanas de consulta ejecutadas.
 * **mean_fahrenheit_temp**: Tabla temporal que almacenará las medias calculadas de las temperaturas (° F) obtenidas en una ventana.
 * **kafka_means_fahrenheit**: Tabla que contendrá todas las medias calculadas de cada una de las ventanas de consulta ejecutadas.
-* **gen_test_data**: Tabla que contiene datos generados aleatoriamente para probar el modelo de clasificación Kmedias. Los datos pueden encontrarse en la carpeta test_data. Los datos fueron generados bajo las siguientes especificaciones:
+* **gen_test_data**: Tabla que contiene datos generados aleatoriamente para probar el modelo de clasificación Kmedias. Los datos pueden encontrarse en la carpeta `data/test_data`. Los datos fueron generados bajo las siguientes especificaciones:
    * **id**: Entero autoincremental (unidad) desde valor `1`.
    * **fecha**: String en formato `yyyy-MM-dd'T'HH:mm:ssZ` entre `2016-11-10` y `2018-10-31`.
    * **timestamp**: String de marca de tiempo en formato Unix desde `1478965467` hasta `1541592359`.
